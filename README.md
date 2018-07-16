@@ -50,7 +50,7 @@ use Yfancc20\Pay2goInvoice\Invoice;
 1. B2C (BuyerType = 0)
 ```
 $data = [
-	'BuyerType' => '0', // B2C，
+	'BuyerType' => '0', // B2C
     'MerchantOrderNo' => <自訂商品編號>,
     'BuyerName' => <買受人姓名>,
     'CarrierType' => <載具類別>, // 0:手機條碼, 1:自然人憑證條碼載具 2:智富寶載具
