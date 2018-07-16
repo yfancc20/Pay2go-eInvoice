@@ -1,6 +1,6 @@
 {
     "name": "yfancc20/pay2go-einvoice",
-    "description": "A serial API's from Pay2go's invoice service.",
+    "description": "A library of connecting Pay2go's invoice service.",
     "authors": [
         {
             "name": "Yifan Wu",
