@@ -7,6 +7,7 @@ class CreateInvoice extends Pay2GoInvoice
     /*
      * 開立發票的 class
      */
+    protected $taxRate;
 
     // 設定串接的網址
     protected function setUrl()
@@ -46,8 +47,8 @@ class CreateInvoice extends Pay2GoInvoice
             'LoveCode' => '',
             'PrintFlag' => 'Y',
             'ItemName' => '',
-            'ItemCount' => 0, // 多商品以 | 隔開（string）
-            'ItemUnit' => '',
+            'ItemCount' => 1, // 多商品以 | 隔開（string）
+            'ItemUnit' => '個',
             'ItemPrice' => 0,
             'ItemAmt' => 0,
             'ItemTaxType' => '',
@@ -55,25 +56,20 @@ class CreateInvoice extends Pay2GoInvoice
             'CreateStatusTime' => '',
             'Comment' => config('pay2goinv.Comment')
         ];
+
+        $this->taxRate = $this->postData['TaxRate'] * 0.01 + 1;
     }
 
-    // 設定參數（從訂單）
+    // 設定參數（overwrite原本的 setData()）
     public function setData($data)
     {
         // 可接受 array / object
-        if (is_array($data)) {
-            $this->checkPostData($data);
-        } else if (is_object($data)) {
-            $this->checkPostData((array) $data);
-        }
+        $this->setDataByFields($data);
 
+        // 檢查傳出資料
+        $this->checkPostData($data);
+        
         return $this->postData;
-    }
-
-    // 設定參數：加在 comment 後的字
-    public function addComment($str)
-    {
-        $this->postData['Comment'] .= $str;
     }
 
     /*
@@ -82,11 +78,12 @@ class CreateInvoice extends Pay2GoInvoice
      */
     private function checkPostData($data)
     {
+
         // B2B、B2C 欄位條件
-        if ($data['buyer_type'] == 2) {
+        if ($data['BuyerType'] == 2) {
             // B2B，有統編
-            $this->postData['BuyerName'] = ' ';
-            $this->postData['BuyerUBN'] = (string) $data['company_number'];
+            $this->postData['BuyerName'] = $data['BuyerName'];
+            $this->postData['BuyerUBN'] = (string) $data['BuyerUBN'];
             $this->postData['Category'] = 'B2B';
             // 載具類別、愛心代碼欄位只適用 B2C
             $this->postData['CarrierType'] = '';
@@ -94,28 +91,29 @@ class CreateInvoice extends Pay2GoInvoice
 
             $this->postData['PrintFlag'] = 'Y'; // B2B 必填 Y
             // 未稅價
-            $this->postData['ItemPrice'] = (string) round($data['amount'] / 1.05);
-            $this->postData['ItemAmt'] = (string) round($data['amount'] / 1.05);
+            $this->postData['ItemPrice'] = (string) round($data['ItemPrice'] / $this->taxRate);
+            $this->postData['ItemAmt'] = (string) round($data['ItemPrice'] / $this->taxRate);
 
         } else {
             // B2C，買受人個人
-            $this->postData['BuyerName'] = (string) $data['buyer_name'];
+            $this->postData['BuyerName'] = (string) $data['BuyerName'];
+            $this->postData['BuyerUBN'] = '';
             $this->postData['Category'] = 'B2C';
             $this->postData['PrintFlag'] = 'N';
 
             // 載具類別有提供時，LoveCode 必為空值
-            if ($data['buyer_type'] == 0) {
+            if ($data['BuyerType'] == 0) {
                 $this->postData['LoveCode'] = '';
-                $this->postData['CarrierType'] = (string) $data['carrier_type'];
+                $this->postData['CarrierType'] = (string) $data['CarrierType'];
 
                 // 載具編號
                 switch ($this->postData['CarrierType']) {
                     case '0': // 手機條碼
-                        $this->postData['CarrierNum'] = rawurlencode($data['carrier_num']);
+                        $this->postData['CarrierNum'] = rawurlencode($data['CarrierNum']);
                         break;
 
                     case '1': // 自然人
-                        $this->postData['CarrierNum'] = rawurlencode($data['carrier_num']);
+                        $this->postData['CarrierNum'] = rawurlencode($data['CarrierNum']);
                         break;
 
                     case '2': // 智付寶載具
@@ -128,14 +126,14 @@ class CreateInvoice extends Pay2GoInvoice
                         $this->postData['PrintFlag'] = 'Y';
                         break;
                 }
-            } else if ($data['buyer_type'] == 1){ // 捐贈
-                $this->postData['CarrierType'] = '';
-                $this->postData['LoveCode'] = $data['love_code'];
+            } else if ($data['BuyerType'] == 1){ // 捐贈
+                $this->postData['CarrierType'] = ''; // 捐贈時，載具類別為空值
+                $this->postData['LoveCode'] = $data['LoveCode'];
             }
 
             // 含稅價
-            $this->postData['ItemPrice'] = (string) $data['amount'];
-            $this->postData['ItemAmt'] = (string) $data['amount'];
+            $this->postData['ItemPrice'] = (string) $data['ItemPrice'];
+            $this->postData['ItemAmt'] = $this->postData['ItemCount'] * $this->postData['ItemPrice'];
 
         }
 
@@ -144,7 +142,7 @@ class CreateInvoice extends Pay2GoInvoice
             $this->postData['TaxRate'] = 0;
         }
 
-        // 混合應睡、零稅、免稅要提供銷售額
+        // 混合應稅、零稅、免稅要提供銷售額
         // if ($this->postData['TaxType'] == '2' || $this->postData['TaxType'] == '3' || $this->postData['TaxType'] == '9') {
         //     // $this->postData['AmtSales'] = ;
         //     // $this->postData['AmtZero'] = ;
@@ -162,24 +160,17 @@ class CreateInvoice extends Pay2GoInvoice
             $amt = $this->postData['AmtSales'] + $this->postData['AmtZero'] + $this->postData['AmtFree'];
             // $this->postData['ItemTaxType'] = ;
         } else {
-            $amt = round($data['amount'] / 1.05);
+            $amt = round($data['ItemPrice'] / $this->taxRate);
         }
 
         // 算稅額、發票金額
-        $taxAmt = $data['amount'] - $amt;
+        $taxAmt = $data['ItemPrice'] - $amt;
         $totalAmt = $amt + $taxAmt;
 
         // 共同欄位
-        $this->postData['BuyerAddress'] = (string) isset($data['buyer_address']) ? $data['buyer_address'] : '';
-        $this->postData['BuyerEmail'] = (string) isset($data['buyer_email']) ? $data['buyer_email'] : '';
-        $this->postData['MerchantOrderNo'] = (string) $data['no'];
         $this->postData['Amt'] = $amt;
         $this->postData['TaxAmt'] = $taxAmt;
         $this->postData['TotalAmt'] = $totalAmt;
-        $this->postData['ItemName'] = (string) $data['desc'];
-        $this->postData['ItemCount'] = '1';
-        $this->postData['ItemUnit'] = '個';
-
     }
 }
 

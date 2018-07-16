@@ -28,6 +28,7 @@ class Pay2GoInvoice
 
         // default settings
         $this->debugMode = config('pay2goinv.Debug');
+        $this->postData = [];
         $this->setDefault();
         $this->setUrl();
     }
@@ -144,36 +145,19 @@ class Pay2GoInvoice
         return $response;
     }
 
-    // 設定欲傳送參數（直接設定）
-    public function setPostData($data, $value = '')
+    // 設定postData參數
+    public function setData($data)
     {
-        if (is_array($data)) {
-            // form of data: array
-            foreach ($data as $key => $value) {
-                if (isset($this->postData[$key])) {
-                    $this->postData[$key] = $value;
-                } else {
-                    return 'The parameter\'s name is wrong: ' . $key;
-                }
-            }
-        } else {
-            // form of data: key => value
-            $key = $data;
-            if (isset($this->postData[$key])) {
-                $this->postData[$key] = $value;
-            } else {
-                return 'The parameter\'s name is wrong: ' . $key;
-            }
-        }
+        $this->setDataByFields($data);
+
+        return $this->postData;
     }
 
-    // 設定 debug mode
-    public function setDebug($debug)
+    // 根據傳入data逐一設定postData欄位
+    public function setDataByFields($data)
     {
-        if ($debug) {
-            $this->debugMode = true;
-        } else {
-            $this->debugMode = false;
+        foreach ($data as $key => $value) {
+            $this->postData[$key] = $value;
         }
     }
 
@@ -181,18 +165,5 @@ class Pay2GoInvoice
     public function getRawResult()
     {
         return $this->rawResult;
-    }
-
-    // 設定商店ID
-    public function setMerchantId($merchantId)
-    {
-        $this->merchantId = $merchantId;
-    }
-
-    // 設定Hash參數
-    public function setHash($hashKey, $hashIv)
-    {
-        $this->hashKey = $hashKey;
-        $this->hashIv = $hashIv;
     }
 }

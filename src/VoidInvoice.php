@@ -29,17 +29,4 @@ class VoidInvoice extends Pay2GoInvoice
             'InvalidReason' => ''
         ];
     }
-
-    // 設定參數
-    public function setData($data)
-    {
-        // 可接受 array / object
-        $this->postData['InvoiceNumber'] = $data['invoiceNumber'];
-        $this->postData['InvalidReason'] = $data['invalidReason'];
-
-        return $this->postData;
-    }
-
 }
-
-?>
