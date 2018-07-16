@@ -13,5 +13,6 @@
         "psr-4": {
             "Yfancc20\\Pay2goInvoice\\": "src"
         }
-    }
+    },
+    "license": "MIT"
 }
