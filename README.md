@@ -45,7 +45,7 @@ use Yfancc20\Pay2goInvoice\Invoice;
 
 ### 開立發票：
 開立發票共有三種模式，分別為 B2C, 捐贈, B2B。
-本 Package 使用欄位 *BuyerType* （非智富寶官方提供欄位）做區分，此欄位為必填。
+本 Package 使用欄位 *BuyerType* （非智付寶官方提供欄位）做區分，此欄位為必填。
 
 1. B2C (BuyerType = 0)
 ```
@@ -53,7 +53,7 @@ $data = [
     'BuyerType' => '0', // B2C
     'MerchantOrderNo' => <自訂商品編號>,
     'BuyerName' => <買受人姓名>,
-    'CarrierType' => <載具類別>, // 0:手機條碼, 1:自然人憑證條碼載具 2:智富寶載具
+    'CarrierType' => <載具類別>, // 0:手機條碼, 1:自然人憑證條碼載具 2:智付寶載具
     'CarrierNum' => <載具編號>,
     'ItemPrice' => <商品單價>,
     'ItemName' => <商品名稱>,
@@ -129,12 +129,12 @@ $result = $invoice->void($data);
 ```
 
 #### 查詢發票：
-查詢發票的回傳結果有兩種顯示方式，一為直接回傳資料，二為以Post Form的方式導向智富寶發票頁面，可在 `config/pay2goinv.php` 中設定 `DisplayFlag` 的值。
+查詢發票的回傳結果有兩種顯示方式，一為直接回傳資料，二為以Post Form的方式導向智付寶發票頁面，可在 `config/pay2goinv.php` 中設定 `DisplayFlag` 的值。
 ```
 // 直接回傳資料
 // 'DisplayFlag' => '',
 
-// 導向智富寶發票頁面
+// 導向智付寶發票頁面
 // 'DisplayFlag' => '1',
 ```
 
@@ -167,7 +167,7 @@ $result = $invoice->search($data);
 
 #### Notes
 - 以上的 `$data` 可接受 Object or Array 兩種型態。
-- 除了上述欄位外，其他欄位請參考 [智富寶API](https://inv.pay2go.com/Invoice_index/download)，並自行在`$data`中新增參數即可
+- 除了上述欄位外，其他欄位請參考 [智付寶API](https://inv.pay2go.com/Invoice_index/download)，並自行在`$data`中新增參數即可
 
 ## Other Usage:
 - 當呼叫過四個函式其中一個後，除了原本回傳的結果外，亦可使用 `getPostData()` 取得類別中實際送出的資料。
