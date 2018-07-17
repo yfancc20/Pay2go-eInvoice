@@ -47,8 +47,8 @@ cp vendor/yfancc20/pay2go-einvoice/config/pay2goinv.php config/pay2goinv.php
 ```
 use Yfancc20\Pay2goInvoice\Invoice;
 ```
-
-### 開立發票：<a name="create"></a>
+<a name="create"></a>
+### 開立發票：
 開立發票共有三種模式，分別為 B2C, 捐贈, B2B。
 本 Package 使用欄位 *BuyerType* （非智付寶官方提供欄位）做區分，此欄位為必填。
 
@@ -105,8 +105,8 @@ $result = $invoice->create(data);
 - 商品數量預設為 1。
 - 商品單位若不設置，預設為「個」。
 
-
-### 折讓發票：<a name="allow"></a>
+<a name="allow"></a>
+### 折讓發票：
 ```
 $data = [
     'InvoiceNo' => <發票號碼>,
@@ -124,7 +124,8 @@ $result = $invoice->allow($data);
 - 商品數量預設為 1。
 - 商品單位若不設置，預設為「個」。
 
-### 作廢發票：<a name="void"></a>
+<a name="void"></a>
+### 作廢發票：
 ```
 $data = [
     'InvoiceNumber' => <發票號碼>,
@@ -134,7 +135,8 @@ $invoice = new Invoice();
 $result = $invoice->void($data);
 ```
 
-### 查詢發票：<a name="search"></a>
+<a name="search"></a>
+### 查詢發票：
 查詢發票的回傳結果有兩種顯示方式，一為直接回傳資料，二為以Post Form的方式導向智付寶發票頁面，可在 `config/pay2goinv.php` 中設定 `DisplayFlag` 的值。
 ```
 // 直接回傳資料
