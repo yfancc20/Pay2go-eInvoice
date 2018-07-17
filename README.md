@@ -10,8 +10,8 @@ A library of connecting Pay2go's invoice service.
 composer require yfancc20/pay2go-einvoice:dev-master
 ```
 
-2. Add the service provider:
-In `config/app.php`,
+2. Copy the config file.
+(a) In `config/app.php`,
 ```
     'providers' => [
         /*
@@ -24,18 +24,17 @@ In `config/app.php`,
         Yfancc20\Pay2goInvoice\Pay2goInvoiceServiceProvider::class,
 ```
 
-3. Publish the config file.
-In your bash of the workspace:
+After adding the ServiceProvider, publish the config file.
 ```
 php artisan vendor:publish
 ```
 
-Or you can just copy it manually.
-Switch to your project's folder, then
+(b) Because the proivder is only for publishing the config, you can also copy it manually without adding the provider.
 ```
 cp vendor/yfancc20/pay2go-einvoice/config/pay2goinv.php config/pay2goinv.php
 ```
-Remember that the filename `pay2goinv.php` shouldn't be changed!
+
+*Remember that the filename `pay2goinv.php` should not be changed!*
 
 ## Usage
 ### 引用、初始化類別：
