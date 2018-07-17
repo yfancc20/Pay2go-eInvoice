@@ -4,13 +4,18 @@ A library of connecting Pay2go's invoice service.
 ## Getting Started
 此 Package 共實作了四種發票 API 操作，分別為「開立」、「折讓」、「作廢」、「查詢」，並將結果以 Array 傳回。
 
+- [開立發票](#create)
+- [折讓發票](#allow)
+- [作廢發票](#void)
+- [查詢發票](#search)
+
 ## Install
 1. Install from composer:
 ```
 composer require yfancc20/pay2go-einvoice:dev-master
 ```
 
-2. Copy the config file:
+2. Copy the config file (2 methods):
 
 (a) In `config/app.php`,
 ```
@@ -43,7 +48,7 @@ cp vendor/yfancc20/pay2go-einvoice/config/pay2goinv.php config/pay2goinv.php
 use Yfancc20\Pay2goInvoice\Invoice;
 ```
 
-### 開立發票：
+### 開立發票：<a name="create"></a>
 開立發票共有三種模式，分別為 B2C, 捐贈, B2B。
 本 Package 使用欄位 *BuyerType* （非智付寶官方提供欄位）做區分，此欄位為必填。
 
@@ -101,7 +106,7 @@ $result = $invoice->create(data);
 - 商品單位若不設置，預設為「個」。
 
 
-### 折讓發票：
+### 折讓發票：<a name="allow"></a>
 ```
 $data = [
     'InvoiceNo' => <發票號碼>,
@@ -119,7 +124,7 @@ $result = $invoice->allow($data);
 - 商品數量預設為 1。
 - 商品單位若不設置，預設為「個」。
 
-### 作廢發票：
+### 作廢發票：<a name="void"></a>
 ```
 $data = [
     'InvoiceNumber' => <發票號碼>,
@@ -129,7 +134,7 @@ $invoice = new Invoice();
 $result = $invoice->void($data);
 ```
 
-### 查詢發票：
+### 查詢發票：<a name="search"></a>
 查詢發票的回傳結果有兩種顯示方式，一為直接回傳資料，二為以Post Form的方式導向智付寶發票頁面，可在 `config/pay2goinv.php` 中設定 `DisplayFlag` 的值。
 ```
 // 直接回傳資料
