@@ -11,6 +11,7 @@ composer require yfancc20/pay2go-einvoice:dev-master
 ```
 
 2. Copy the config file:
+
 (a) In `config/app.php`,
 ```
     'providers' => [
