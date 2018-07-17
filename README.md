@@ -89,16 +89,17 @@ $data = [
 ];
 ```
 
+呼叫函式
+```
+$invoice = new Invoice();
+$result = $invoice->create(data);
+```
+
 *[補充]*
 - 除了上述欄位外，可參考官方API提供其他需要的欄位，例如：*BuyerAddress*(買受人地址), *BuyerEmail*(買受人信箱), *Comment*(發票備註)。
 - 商品數量預設為 1。
 - 商品單位若不設置，預設為「個」。
 
-選定好開立模式後，呼叫函數。
-```
-$invoice = new Invoice();
-$result = $invoice->create(data);
-```
 
 #### 折讓發票：
 ```
