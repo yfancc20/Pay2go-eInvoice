@@ -41,7 +41,7 @@ class AllowInvoice extends Pay2GoInvoice
             'Status' => config('pay2goinv.Status_Allow'),
         ];
 
-        $this->taxRate = config('pay2goinv.TacRate') * 0.01 + 1;
+        $this->taxRate = config('pay2goinv.TaxRate') * 0.01 + 1;
     }
 
     // 設定參數（從訂單）
