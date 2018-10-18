@@ -92,7 +92,7 @@ class CreateInvoice extends Pay2GoInvoice
             $this->postData['PrintFlag'] = 'Y'; // B2B 必填 Y
             // 未稅價
             $this->postData['ItemPrice'] = (string) round($data['ItemPrice'] / $this->taxRate);
-            $this->postData['ItemAmt'] = (string) round($data['ItemPrice'] / $this->taxRate);
+            $this->postData['ItemAmt'] = (string) round($data['ItemPrice']*$data['ItemCount'] / $this->taxRate);
 
         } else {
             // B2C，買受人個人
@@ -117,7 +117,7 @@ class CreateInvoice extends Pay2GoInvoice
                         break;
 
                     case '2': // 智付寶載具
-                        $this->postData['CarrierNum'] = rawurlencode($data['buyer_email']);
+                        $this->postData['CarrierNum'] = rawurlencode($data['BuyerEmail']);
                         break;
 
                     default:
@@ -133,7 +133,7 @@ class CreateInvoice extends Pay2GoInvoice
 
             // 含稅價
             $this->postData['ItemPrice'] = (string) $data['ItemPrice'];
-            $this->postData['ItemAmt'] = $this->postData['ItemCount'] * $this->postData['ItemPrice'];
+            $this->postData['ItemAmt'] = $data['ItemCount'] * $data['ItemPrice'];
 
         }
 
