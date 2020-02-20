@@ -1,6 +1,9 @@
 # Pay2go-eInvoice （智付寶 Pay2go 電子發票）
 A library of connecting Pay2go's invoice service.
 
+## Notice
+This project has been moved to [here](https://packagist.org/packages/treerful/pay2go-invoice)
+
 ## Getting Started
 此 Package 共實作了四種發票 API 操作，分別為「開立」、「折讓」、「作廢」、「查詢」，並將結果以 Array 傳回。
 
